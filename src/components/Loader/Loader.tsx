@@ -5,7 +5,10 @@ const override = {
   margin: '100px auto',
   borderColor: 'green',
 };
-const Loader = ({ loading }) => {
+interface LoaderProps {
+  loading: boolean;
+}
+const Loader = ({ loading }: LoaderProps) => {
   return (
     <div>
       <RingLoader color="#6dc55f" cssOverride={override} loading={loading} />

@@ -1,18 +1,22 @@
 import css from './SearchBar.module.css';
-import { useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 import { FcSearch } from 'react-icons/fc';
+import { FC, useState, FormEvent, ChangeEvent } from 'react';
 
-const SearchBar = ({ onSubmit }) => {
-  const [images, setImages] = useState('');
+interface SearchBarProps {
+  onSubmit: (query: string) => void;
+}
+const SearchBar: FC<SearchBarProps> = ({ onSubmit }) => {
+  const [images, setImages] = useState<string>('');
 
-  const handleChange = evt => {
+  const handleChange = (evt: ChangeEvent<HTMLInputElement>) => {
     setImages(evt.target.value);
   };
-  const handleSubmit = evt => {
+  const handleSubmit = (evt: FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
     if (!images.trim()) {
       toast.error('Введите критерий поиска');
+      return;
     }
     onSubmit(images);
     setImages('');
@@ -49,6 +53,5 @@ const SearchBar = ({ onSubmit }) => {
       />
     </div>
   );
-  resetForm(images);
 };
 export default SearchBar;

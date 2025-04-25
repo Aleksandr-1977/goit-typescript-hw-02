@@ -1,7 +1,17 @@
 import css from './ImageModal.module.css';
+import React from 'react';
 import Modal from 'react-modal';
 
-const ImageModal = ({
+interface ImageModalProps {
+  modalIsOpen: boolean;
+  closeModal: () => void;
+  src: string;
+  alt: string;
+  goToNextImage: () => void;
+  goToPreviousImage: () => void;
+}
+
+const ImageModal: React.FC<ImageModalProps> = ({
   modalIsOpen,
   closeModal,
   src,
@@ -15,7 +25,7 @@ const ImageModal = ({
       overlayClassName={css.overlay}
       isOpen={modalIsOpen}
       onRequestClose={closeModal}
-      appElement={document.getElementById('root')}
+      appElement={document.getElementById('root') ?? undefined}
     >
       <div className={css.modalContent}>
         <button className={css.prevButton} onClick={goToPreviousImage}>

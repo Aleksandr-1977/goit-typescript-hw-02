@@ -11,15 +11,16 @@ axios.defaults.params = {
   orientation: 'landscape',
   per_page: 12,
 };
-interface ApiPhoto {
+export interface ApiPhoto {
   id: string;
+  alt_description: string;
   urls: {
     regular: string;
     small: string;
   };
-  alt_description?: string;
+  description?: string;
 }
-interface ApiResponse {
+export interface ApiResponse {
   total: number;
   total_pages: number;
   results: ApiPhoto[];

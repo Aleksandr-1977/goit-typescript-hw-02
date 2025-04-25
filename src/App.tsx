@@ -1,56 +1,64 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 import './App.css';
 import SearchBar from './components/SearchBar/SearchBar';
-import { getImages } from './apiService/getAPI';
+import { ApiPhoto, getImages } from './apiService/getAPI';
 import ImageGallery from './components/ImageGallery/ImageGallery';
 import Loader from './components/Loader/Loader';
 import Error from './components/ErrorMessage/ErrorMessage';
 import LoadMoreBtn from './components/LoadMoreBtn/LoadMoreBtn';
 import ImageModal from './components/ImageModal/ImageModal';
 
+type Image = ApiPhoto;
+
 function App() {
-  const [query, setQuery] = useState('');
-  const [page, setPage] = useState(1);
-  const [images, setImages] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [isError, setIsError] = useState(false);
-  const [totalPages, setTotalPages] = useState(1);
+  const [query, setQuery] = useState<string>('');
+  const [page, setPage] = useState<number>(1);
+  const [images, setImages] = useState<Image[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [isError, setIsError] = useState<boolean>(false);
+  const [totalPages, setTotalPages] = useState<number>(1);
+  const [modalIsOpen, setIsOpen] = useState<boolean>(false);
+  const [modalImage, setModalImage] = useState<string>('');
+  const [altDescription, setAltDescription] = useState<string>('');
+  const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
 
-  const [modalIsOpen, setIsOpen] = useState(false);
-  const [modalImage, setModalImage] = useState('');
-  const [altDescription, setAltDescription] = useState('');
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-
-  const openModal = index => {
+  const openModal = (index: number): void => {
     setCurrentImageIndex(index);
     setModalImage(images[index].urls.regular);
     setAltDescription(images[index].alt_description);
     setIsOpen(true);
   };
 
-  const closeModal = () => {
+  const closeModal = (): void => {
     setIsOpen(false);
   };
 
-  const updateModalStateData = index => {
+  const updateModalStateData = (index: number): void => {
     setCurrentImageIndex(index);
     setModalImage(images[index].urls.regular);
     setAltDescription(images[index].alt_description);
   };
 
-  const goToNextImage = () => {
+  const goToNextImage = (): void => {
     if (currentImageIndex < images.length - 1) {
       setCurrentImageIndex(currentImageIndex + 1);
       updateModalStateData(currentImageIndex + 1);
     }
   };
 
-  const goToPreviousImage = () => {
+  const goToPreviousImage = (): void => {
     if (currentImageIndex > 0) {
       setCurrentImageIndex(currentImageIndex - 1);
       updateModalStateData(currentImageIndex - 1);
     }
+  };
+
+  const getQuery = (image: string): void => {
+    if (image === query) return;
+    setQuery(image);
+    setImages([]);
+    setPage(1);
   };
 
   useEffect(() => {
@@ -81,12 +89,6 @@ function App() {
     handleSearch();
   }, [query, page]);
 
-  const getQuery = image => {
-    if (image === query) return;
-    setQuery(image);
-    setImages([]);
-    setPage(1);
-  };
   return (
     <>
       <SearchBar onSubmit={getQuery} />
